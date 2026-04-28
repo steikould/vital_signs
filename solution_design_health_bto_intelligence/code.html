@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Solution Design Health - BTO Portfolio Intelligence</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600&amp;family=Newsreader:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface": "#17130d",
+                      "on-error": "#690005",
+                      "on-primary-fixed": "#291800",
+                      "primary-fixed": "#ffddb2",
+                      "on-tertiary-container": "#06416b",
+                      "primary": "#f3bd6e",
+                      "background": "#17130d",
+                      "on-secondary-container": "#b5b8c3",
+                      "inverse-surface": "#ebe1d8",
+                      "error": "#ffb4ab",
+                      "surface-variant": "#39342e",
+                      "outline-variant": "#4f4538",
+                      "inverse-on-surface": "#353029",
+                      "primary-fixed-dim": "#f3bd6e",
+                      "outline": "#9c8f7f",
+                      "tertiary-fixed-dim": "#9ecafc",
+                      "on-tertiary": "#003256",
+                      "surface-container-lowest": "#110e09",
+                      "error-container": "#93000a",
+                      "on-primary": "#442b00",
+                      "on-surface-variant": "#d3c4b3",
+                      "surface-container-low": "#1f1b15",
+                      "surface-container": "#231f19",
+                      "on-secondary-fixed": "#181c24",
+                      "on-surface": "#ebe1d8",
+                      "on-primary-container": "#573800",
+                      "on-secondary-fixed-variant": "#434750",
+                      "on-tertiary-fixed": "#001d34",
+                      "secondary": "#c3c6d1",
+                      "surface-dim": "#17130d",
+                      "tertiary-fixed": "#d0e4ff",
+                      "tertiary": "#9ecafc",
+                      "secondary-fixed-dim": "#c3c6d1",
+                      "surface-tint": "#f3bd6e",
+                      "secondary-container": "#454952",
+                      "on-secondary": "#2c3039",
+                      "secondary-fixed": "#dfe2ee",
+                      "surface-container-highest": "#39342e",
+                      "surface-bright": "#3e3832",
+                      "on-primary-fixed-variant": "#624000",
+                      "on-tertiary-fixed-variant": "#154974",
+                      "on-error-container": "#ffdad6",
+                      "on-background": "#ebe1d8",
+                      "inverse-primary": "#7f560f",
+                      "surface-container-high": "#2e2923",
+                      "primary-container": "#d4a155",
+                      "tertiary-container": "#82aede"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "1px",
+                      "container-margin": "32px",
+                      "stack-sm": "8px",
+                      "stack-md": "16px",
+                      "unit": "4px",
+                      "stack-lg": "24px"
+              },
+              "fontFamily": {
+                      "body-ui-bold": [
+                              "Inter Tight"
+                      ],
+                      "tabular-data": [
+                              "Inter Tight"
+                      ],
+                      "metadata-label": [
+                              "Inter Tight"
+                      ],
+                      "body-ui": [
+                              "Inter Tight"
+                      ],
+                      "h2-editorial": [
+                              "Newsreader"
+                      ],
+                      "h1-editorial": [
+                              "Newsreader"
+                      ],
+                      "data-large": [
+                              "Newsreader"
+                      ],
+                      "display-lg": [
+                              "Newsreader"
+                      ]
+              },
+              "fontSize": {
+                      "body-ui-bold": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "tabular-data": [
+                              "13px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "metadata-label": [
+                              "11px",
+                              {
+                                      "lineHeight": "1",
+                                      "letterSpacing": "0.1em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-ui": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "h2-editorial": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "h1-editorial": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "data-large": [
+                              "36px",
+                              {
+                                      "lineHeight": "1",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+            },
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24
+        }
+    </style>
+</head>
+<body class="bg-[#0E1116] text-[#ebe1d8] font-body-ui text-body-ui h-screen overflow-hidden flex">
+<!-- SideNavBar (Shared Component) -->
+<nav class="fixed left-0 top-0 h-full flex flex-col docked left-0 h-screen w-64 border-r border-r border-[#2A2F3A] bg-[#161A22] z-50 hidden md:flex">
+<div class="px-4 py-6 border-b border-[#2A2F3A]">
+<h1 class="font-serif italic text-[#D4A155] text-xl">BTO INTELLIGENCE</h1>
+<p class="font-sans uppercase tracking-widest text-[10px] text-[#8B8F99] mt-1">Terminal v4.2</p>
+</div>
+<div class="flex flex-col mt-4 flex-grow">
+<!-- Inactive -->
+<a class="flex items-center gap-3 text-[#8B8F99] px-6 py-4 hover:bg-[#0E1116] hover:text-[#E8E6E1] transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-metadata-label text-metadata-label">PORTFOLIO</span>
+</a>
+<!-- Inactive -->
+<a class="flex items-center gap-3 text-[#8B8F99] px-6 py-4 hover:bg-[#0E1116] hover:text-[#E8E6E1] transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="query_stats">query_stats</span>
+<span class="font-metadata-label text-metadata-label">STRATEGY</span>
+</a>
+<!-- Active -->
+<a class="flex items-center gap-3 text-[#D4A155] border-l-2 border-[#D4A155] bg-[#0E1116] font-bold px-6 py-4" href="#">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+<span class="font-metadata-label text-metadata-label">RISK</span>
+</a>
+<!-- Inactive -->
+<a class="flex items-center gap-3 text-[#8B8F99] px-6 py-4 hover:bg-[#0E1116] hover:text-[#E8E6E1] transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+<span class="font-metadata-label text-metadata-label">INITIATIVES</span>
+</a>
+<!-- Inactive -->
+<a class="flex items-center gap-3 text-[#8B8F99] px-6 py-4 hover:bg-[#0E1116] hover:text-[#E8E6E1] transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-metadata-label text-metadata-label">SYSTEM</span>
+</a>
+</div>
+<div class="px-6 py-4 border-t border-[#2A2F3A] flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-[#2A2F3A] flex items-center justify-center overflow-hidden">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="professional headshot of an executive in a dark suit" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcCfAkAwoqZmzXv7QHy0qGEx-1GbreiAOHCCWCOEDO3H8gs8rY_hhmEaOjfx_Ja7MmtxojJe_ZYpRbKSiPCGhn0ZllMgwDFNKYANCD6bya0Il8E9xoPLzWFBh01QXhCxwlQrOWSp3omy2cS4ot3millbcVzqtqFGmyYLyna2o6jyBD_HFJOiQRNYgS8FNPuvD1Fvp9Vl1lIdyn4aRe21oWcy9F_Zd4owV--_0GwxnVdAD9NECK5y7PipJJOOrh8uux-rvuNSFFDGDK"/>
+</div>
+<div>
+<p class="font-body-ui-bold text-body-ui-bold text-[#E8E6E1]">E. Director</p>
+<p class="font-metadata-label text-metadata-label text-[#8B8F99] mt-0.5">ADMIN</p>
+</div>
+</div>
+</nav>
+<!-- Main Canvas -->
+<main class="flex-grow flex flex-col ml-0 md:ml-64 h-full relative z-0 bg-[#0E1116]">
+<!-- TopAppBar (Shared Component) -->
+<header class="flex justify-between items-center w-full px-6 py-3 h-16 docked full-width top-0 border-b border-b border-[#2A2F3A] bg-[#0E1116] z-10 sticky top-0">
+<div class="flex items-center gap-6">
+<span class="text-[#D4A155] font-serif font-black tracking-tighter uppercase text-lg hidden md:block">BTO PORTFOLIO INTELLIGENCE</span>
+<button class="md:hidden text-[#E8E6E1]">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<nav class="hidden lg:flex items-center gap-6">
+<!-- Inactive -->
+<a class="font-metadata-label text-metadata-label text-[#8B8F99] hover:text-[#E8E6E1] transition-opacity" href="#">SUMMARY</a>
+<!-- Active -->
+<a class="font-metadata-label text-metadata-label text-[#D4A155] border-b border-[#D4A155] pb-2" href="#">DIAGNOSTICS</a>
+<!-- Inactive -->
+<a class="font-metadata-label text-metadata-label text-[#8B8F99] hover:text-[#E8E6E1] transition-opacity" href="#">GAP ANALYSIS</a>
+<!-- Inactive -->
+<a class="font-metadata-label text-metadata-label text-[#8B8F99] hover:text-[#E8E6E1] transition-opacity" href="#">REPORTS</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#8B8F99] text-[18px]">search</span>
+<input class="bg-[#161A22] border border-[#2A2F3A] text-[#E8E6E1] font-tabular-data text-tabular-data rounded-none py-1.5 pl-9 pr-3 w-48 focus:outline-none focus:border-[#D4A155] transition-colors placeholder:text-[#454952]" placeholder="Search terminal..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<button class="text-[#8B8F99] hover:text-[#E8E6E1] transition-colors p-1" title="notifications">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-[#8B8F99] hover:text-[#E8E6E1] transition-colors p-1" title="help_outline">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+</div>
+<button class="font-metadata-label text-metadata-label text-[#0E1116] bg-[#D4A155] px-4 py-1.5 hover:opacity-90 transition-opacity">
+                    EXPORT DATA
+                </button>
+</div>
+</header>
+<!-- Content Area -->
+<div class="flex-grow overflow-y-auto p-6 lg:p-8 custom-scrollbar">
+<!-- Page Header -->
+<div class="mb-8 flex justify-between items-end">
+<div>
+<h2 class="font-h1-editorial text-h1-editorial text-[#E8E6E1]">Solution Design Health</h2>
+<p class="font-body-ui text-body-ui text-[#8B8F99] mt-2 max-w-2xl">Architectural review of active AI initiatives. Assessing structural readiness, sequencing risks, and enabling infrastructure gaps prior to deployment.</p>
+</div>
+</div>
+<!-- Stats Row -->
+<div class="grid grid-cols-2 md:grid-cols-5 gap-[1px] bg-[#2A2F3A] mb-8">
+<div class="bg-[#161A22] p-4 flex flex-col justify-between h-24">
+<span class="font-metadata-label text-metadata-label text-[#8B8F99]">TOTAL REQUIRING SD</span>
+<span class="font-data-large text-data-large text-[#E8E6E1]">42</span>
+</div>
+<div class="bg-[#161A22] p-4 flex flex-col justify-between h-24">
+<span class="font-metadata-label text-metadata-label text-[#8B8F99]">SD COVERAGE</span>
+<div class="flex items-baseline gap-2">
+<span class="font-data-large text-data-large text-[#D4A155]">68%</span>
+<span class="font-metadata-label text-metadata-label text-error">↓ 2%</span>
+</div>
+</div>
+<div class="bg-[#161A22] p-4 flex flex-col justify-between h-24">
+<span class="font-metadata-label text-metadata-label text-[#8B8F99]">AVG HEALTH SCORE</span>
+<span class="font-data-large text-data-large text-primary-fixed">B-</span>
+</div>
+<div class="bg-[#161A22] p-4 flex flex-col justify-between h-24 border-l-2 border-[#D4A155]">
+<span class="font-metadata-label text-metadata-label text-[#8B8F99]">STALE DESIGNS</span>
+<span class="font-data-large text-data-large text-error">7</span>
+</div>
+<div class="bg-[#161A22] p-4 flex flex-col justify-between h-24">
+<span class="font-metadata-label text-metadata-label text-[#8B8F99]">MISSING DESIGNS</span>
+<span class="font-data-large text-data-large text-error">13</span>
+</div>
+</div>
+<!-- Data Table -->
+<div class="bg-[#161A22] border border-[#2A2F3A]">
+<div class="px-4 py-3 border-b border-[#2A2F3A] flex justify-between items-center bg-[#0E1116]">
+<h3 class="font-body-ui-bold text-body-ui-bold text-[#E8E6E1]">Initiative Diagnostics</h3>
+<div class="flex gap-2">
+<button class="p-1 text-[#8B8F99] hover:text-[#E8E6E1] transition-colors" title="Filter">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+</button>
+<button class="p-1 text-[#8B8F99] hover:text-[#E8E6E1] transition-colors" title="Sort">
+<span class="material-symbols-outlined text-[18px]">sort</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-[#2A2F3A]">
+<th class="py-3 px-4 font-metadata-label text-metadata-label text-[#8B8F99] sticky left-0 bg-[#161A22] z-10 w-64">INITIATIVE</th>
+<th class="py-3 px-4 font-metadata-label text-metadata-label text-[#8B8F99]">SD STATUS</th>
+<th class="py-3 px-4 font-metadata-label text-metadata-label text-[#8B8F99]">HEALTH</th>
+<th class="py-3 px-4 font-metadata-label text-metadata-label text-[#8B8F99]">AI-NATIVE GAPS</th>
+<th class="py-3 px-4 font-metadata-label text-metadata-label text-[#8B8F99]">AI-ENABLING GAPS</th>
+<th class="py-3 px-4 font-metadata-label text-metadata-label text-[#8B8F99]">SEQ RISK</th>
+<th class="py-3 px-4 font-metadata-label text-metadata-label text-[#8B8F99]">DATA RDY</th>
+<th class="py-3 px-4 font-metadata-label text-metadata-label text-[#8B8F99]">INFRA RDY</th>
+<th class="py-3 px-4 font-metadata-label text-metadata-label text-[#8B8F99]">LAST REVIEW</th>
+</tr>
+</thead>
+<tbody class="font-tabular-data text-tabular-data">
+<!-- Row 1: Stale / High Risk -->
+<tr class="border-b border-[#2A2F3A] hover:bg-[#231f19] transition-colors group">
+<td class="py-3 px-4 sticky left-0 bg-[#161A22] group-hover:bg-[#231f19] transition-colors text-[#E8E6E1]">
+<div class="font-body-ui-bold">Predictive Churn Model</div>
+<div class="font-metadata-label text-[#8B8F99] mt-1">ID-8821 • Customer Success</div>
+</td>
+<td class="py-3 px-4">
+<div class="inline-flex items-center px-2 py-0.5 bg-[#d4a155]/10 border-l-2 border-[#d4a155]">
+<span class="font-metadata-label text-[#d4a155]">STALE</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full border border-error flex items-center justify-center text-error font-body-ui-bold">D</div>
+</div>
+</td>
+<td class="py-3 px-4 text-error">High (Model Drift)</td>
+<td class="py-3 px-4 text-error">High (Compute)</td>
+<td class="py-3 px-4">
+<span class="flex items-center gap-1 text-error">
+<span class="material-symbols-outlined text-[16px]">warning</span> High
+                                    </span>
+</td>
+<td class="py-3 px-4">
+<div class="w-full bg-[#0E1116] h-1 mt-1"><div class="bg-error h-1 w-[30%]"></div></div>
+</td>
+<td class="py-3 px-4">
+<div class="w-full bg-[#0E1116] h-1 mt-1"><div class="bg-[#d4a155] h-1 w-[60%]"></div></div>
+</td>
+<td class="py-3 px-4 text-[#8B8F99]">142 days ago</td>
+</tr>
+<!-- Row 2: None / High Risk -->
+<tr class="border-b border-[#2A2F3A] hover:bg-[#231f19] transition-colors group">
+<td class="py-3 px-4 sticky left-0 bg-[#161A22] group-hover:bg-[#231f19] transition-colors text-[#E8E6E1]">
+<div class="font-body-ui-bold">Supply Chain Copilot</div>
+<div class="font-metadata-label text-[#8B8F99] mt-1">ID-9104 • Operations</div>
+</td>
+<td class="py-3 px-4">
+<div class="inline-flex items-center px-2 py-0.5 bg-error/10 border-l-2 border-error">
+<span class="font-metadata-label text-error">NONE</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<span class="text-[#8B8F99]">-</span>
+</td>
+<td class="py-3 px-4 text-[#8B8F99]">Unknown</td>
+<td class="py-3 px-4 text-[#8B8F99]">Unknown</td>
+<td class="py-3 px-4">
+<span class="flex items-center gap-1 text-error">
+<span class="material-symbols-outlined text-[16px]">warning</span> High
+                                    </span>
+</td>
+<td class="py-3 px-4">
+<div class="w-full bg-[#0E1116] h-1 mt-1"><div class="bg-error h-1 w-[10%]"></div></div>
+</td>
+<td class="py-3 px-4">
+<div class="w-full bg-[#0E1116] h-1 mt-1"><div class="bg-[#d4a155] h-1 w-[40%]"></div></div>
+</td>
+<td class="py-3 px-4 text-[#8B8F99]">Never</td>
+</tr>
+<!-- Row 3: Draft -->
+<tr class="border-b border-[#2A2F3A] hover:bg-[#231f19] transition-colors group">
+<td class="py-3 px-4 sticky left-0 bg-[#161A22] group-hover:bg-[#231f19] transition-colors text-[#E8E6E1]">
+<div class="font-body-ui-bold">Automated QA Agent</div>
+<div class="font-metadata-label text-[#8B8F99] mt-1">ID-8432 • Engineering</div>
+</td>
+<td class="py-3 px-4">
+<div class="inline-flex items-center px-2 py-0.5 bg-[#f3bd6e]/10 border-l-2 border-[#f3bd6e]">
+<span class="font-metadata-label text-[#f3bd6e]">DRAFT</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full border border-[#d4a155] flex items-center justify-center text-[#d4a155] font-body-ui-bold">C</div>
+</div>
+</td>
+<td class="py-3 px-4 text-[#E8E6E1]">Med (Latency)</td>
+<td class="py-3 px-4 text-[#d4a155]">Med (Integration)</td>
+<td class="py-3 px-4 text-[#d4a155]">Medium</td>
+<td class="py-3 px-4">
+<div class="w-full bg-[#0E1116] h-1 mt-1"><div class="bg-[#d4a155] h-1 w-[75%]"></div></div>
+</td>
+<td class="py-3 px-4">
+<div class="w-full bg-[#0E1116] h-1 mt-1"><div class="bg-tertiary-container h-1 w-[85%]"></div></div>
+</td>
+<td class="py-3 px-4 text-[#8B8F99]">12 days ago</td>
+</tr>
+<!-- Row 4: In Review -->
+<tr class="border-b border-[#2A2F3A] hover:bg-[#231f19] transition-colors group">
+<td class="py-3 px-4 sticky left-0 bg-[#161A22] group-hover:bg-[#231f19] transition-colors text-[#E8E6E1]">
+<div class="font-body-ui-bold">Dynamic Pricing Engine</div>
+<div class="font-metadata-label text-[#8B8F99] mt-1">ID-9002 • Revenue</div>
+</td>
+<td class="py-3 px-4">
+<div class="inline-flex items-center px-2 py-0.5 bg-tertiary-container/10 border-l-2 border-tertiary-container">
+<span class="font-metadata-label text-tertiary-container">IN REVIEW</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full border border-[#9c8f7f] flex items-center justify-center text-[#9c8f7f] font-body-ui-bold">B</div>
+</div>
+</td>
+<td class="py-3 px-4 text-[#E8E6E1]">Low</td>
+<td class="py-3 px-4 text-[#E8E6E1]">Low</td>
+<td class="py-3 px-4 text-[#8B8F99]">Low</td>
+<td class="py-3 px-4">
+<div class="w-full bg-[#0E1116] h-1 mt-1"><div class="bg-[#9c8f7f] h-1 w-[90%]"></div></div>
+</td>
+<td class="py-3 px-4">
+<div class="w-full bg-[#0E1116] h-1 mt-1"><div class="bg-[#9c8f7f] h-1 w-[95%]"></div></div>
+</td>
+<td class="py-3 px-4 text-[#8B8F99]">2 days ago</td>
+</tr>
+<!-- Row 5: Approved -->
+<tr class="border-b border-[#2A2F3A] hover:bg-[#231f19] transition-colors group">
+<td class="py-3 px-4 sticky left-0 bg-[#161A22] group-hover:bg-[#231f19] transition-colors text-[#E8E6E1]">
+<div class="font-body-ui-bold">Fraud Detection V2</div>
+<div class="font-metadata-label text-[#8B8F99] mt-1">ID-8110 • Security</div>
+</td>
+<td class="py-3 px-4">
+<div class="inline-flex items-center px-2 py-0.5 bg-[#9c8f7f]/10 border-l-2 border-[#9c8f7f]">
+<span class="font-metadata-label text-[#9c8f7f]">APPROVED</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full border border-[#9c8f7f] flex items-center justify-center text-[#9c8f7f] font-body-ui-bold">A</div>
+</div>
+</td>
+<td class="py-3 px-4 text-[#E8E6E1]">None</td>
+<td class="py-3 px-4 text-[#E8E6E1]">None</td>
+<td class="py-3 px-4 text-[#8B8F99]">None</td>
+<td class="py-3 px-4">
+<div class="w-full bg-[#0E1116] h-1 mt-1"><div class="bg-[#9c8f7f] h-1 w-[100%]"></div></div>
+</td>
+<td class="py-3 px-4">
+<div class="w-full bg-[#0E1116] h-1 mt-1"><div class="bg-[#9c8f7f] h-1 w-[100%]"></div></div>
+</td>
+<td class="py-3 px-4 text-[#8B8F99]">Today</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-4 py-3 border-t border-[#2A2F3A] flex justify-between items-center text-[#8B8F99] font-tabular-data text-tabular-data bg-[#0E1116]">
+<span>Showing 1-5 of 15 initiatives</span>
+<div class="flex gap-4">
+<button class="hover:text-[#E8E6E1] transition-colors disabled:opacity-50" disabled="">Previous</button>
+<button class="hover:text-[#E8E6E1] transition-colors">Next</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<style>
+        /* Custom Scrollbar for dark theme */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0E1116; 
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #2A2F3A; 
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #454952; 
+        }
+    </style>
+</body></html>

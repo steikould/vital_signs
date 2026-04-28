@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BTO Portfolio Intelligence</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600&amp;family=Newsreader:ital,wght@0,400;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#17130d",
+                        "on-error": "#690005",
+                        "on-primary-fixed": "#291800",
+                        "primary-fixed": "#ffddb2",
+                        "on-tertiary-container": "#06416b",
+                        "primary": "#f3bd6e",
+                        "background": "#17130d",
+                        "on-secondary-container": "#b5b8c3",
+                        "inverse-surface": "#ebe1d8",
+                        "error": "#ffb4ab",
+                        "surface-variant": "#39342e",
+                        "outline-variant": "#4f4538",
+                        "inverse-on-surface": "#353029",
+                        "primary-fixed-dim": "#f3bd6e",
+                        "outline": "#9c8f7f",
+                        "tertiary-fixed-dim": "#9ecafc",
+                        "on-tertiary": "#003256",
+                        "surface-container-lowest": "#110e09",
+                        "error-container": "#93000a",
+                        "on-primary": "#442b00",
+                        "on-surface-variant": "#d3c4b3",
+                        "surface-container-low": "#1f1b15",
+                        "surface-container": "#231f19",
+                        "on-secondary-fixed": "#181c24",
+                        "on-surface": "#ebe1d8",
+                        "on-primary-container": "#573800",
+                        "on-secondary-fixed-variant": "#434750",
+                        "on-tertiary-fixed": "#001d34",
+                        "secondary": "#c3c6d1",
+                        "surface-dim": "#17130d",
+                        "tertiary-fixed": "#d0e4ff",
+                        "tertiary": "#9ecafc",
+                        "secondary-fixed-dim": "#c3c6d1",
+                        "surface-tint": "#f3bd6e",
+                        "secondary-container": "#454952",
+                        "on-secondary": "#2c3039",
+                        "secondary-fixed": "#dfe2ee",
+                        "surface-container-highest": "#39342e",
+                        "surface-bright": "#3e3832",
+                        "on-primary-fixed-variant": "#624000",
+                        "on-tertiary-fixed-variant": "#154974",
+                        "on-error-container": "#ffdad6",
+                        "on-background": "#ebe1d8",
+                        "inverse-primary": "#7f560f",
+                        "surface-container-high": "#2e2923",
+                        "primary-container": "#d4a155",
+                        "tertiary-container": "#82aede"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "1px",
+                        "container-margin": "32px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "unit": "4px",
+                        "stack-lg": "24px"
+                    },
+                    "fontFamily": {
+                        "body-ui-bold": ["Inter Tight"],
+                        "tabular-data": ["Inter Tight"],
+                        "metadata-label": ["Inter Tight"],
+                        "body-ui": ["Inter Tight"],
+                        "h2-editorial": ["Newsreader"],
+                        "h1-editorial": ["Newsreader"],
+                        "data-large": ["Newsreader"],
+                        "display-lg": ["Newsreader"]
+                    },
+                    "fontSize": {
+                        "body-ui-bold": ["14px", { "lineHeight": "1.5", "fontWeight": "600" }],
+                        "tabular-data": ["13px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "metadata-label": ["11px", { "lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "600" }],
+                        "body-ui": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "h2-editorial": ["24px", { "lineHeight": "1.3", "fontWeight": "400" }],
+                        "h1-editorial": ["32px", { "lineHeight": "1.2", "fontWeight": "400" }],
+                        "data-large": ["36px", { "lineHeight": "1", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #0E1116; color: #E8E6E1; }
+        .hairline-border { border-color: #2A2F3A; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-full flex flex-col docked left-0 h-screen w-64 border-r border-r border-[#2A2F3A] bg-[#161A22] z-50">
+<div class="font-serif italic text-[#D4A155] text-xl px-4 py-6 border-b border-[#2A2F3A]">
+            BTO INTELLIGENCE
+            <div class="font-sans uppercase tracking-widest text-[10px] text-[#8B8F99] mt-1 not-italic">Terminal v4.2</div>
+</div>
+<div class="flex-1 overflow-y-auto py-4">
+<ul class="space-y-1">
+<li>
+<a class="flex items-center gap-3 text-[#D4A155] border-l-2 border-[#D4A155] bg-[#0E1116] font-bold px-6 py-4" href="#">
+<span class="material-symbols-outlined text-[18px]">dashboard</span>
+<span class="font-metadata-label text-metadata-label">PORTFOLIO</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-[#8B8F99] px-6 py-4 hover:bg-[#0E1116] hover:text-[#E8E6E1] transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">query_stats</span>
+<span class="font-metadata-label text-metadata-label">STRATEGY</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-[#8B8F99] px-6 py-4 hover:bg-[#0E1116] hover:text-[#E8E6E1] transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">warning</span>
+<span class="font-metadata-label text-metadata-label">RISK</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-[#8B8F99] px-6 py-4 hover:bg-[#0E1116] hover:text-[#E8E6E1] transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">account_tree</span>
+<span class="font-metadata-label text-metadata-label">INITIATIVES</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-[#8B8F99] px-6 py-4 hover:bg-[#0E1116] hover:text-[#E8E6E1] transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">settings</span>
+<span class="font-metadata-label text-metadata-label">SYSTEM</span>
+</a>
+</li>
+</ul>
+</div>
+<div class="p-4 border-t hairline-border flex items-center gap-3">
+<div class="w-8 h-8 bg-surface-container rounded-full flex items-center justify-center overflow-hidden">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="professional portrait of executive in dark suit against gray background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7l8_3OnE22Wrih3LXaPNH_XG7e-Ab6ahlDhdn6AgxPacUbjT6MlW1dxv1xRZKXvC4Ttr3OQb9Vjr5CgZpRWVz6pnF_Kz_qh4GiHGOjBAhvQIsdK6r_w-wvWX6cBNmwGqzwfM6JvgLgnWakqfjsG9mCiMZ1OBN1gFXRRUXoLXr8PnWkeFRuAaL53CEI24Nn81zSJBsL-S7_oj3Z-MqTMsMxcHo3EpcI3hqsNXEGhGfdTza87AdChu437K-UXBhbzlWLJDPMIkKHwJJ"/>
+</div>
+<div>
+<div class="font-body-ui-bold text-body-ui-bold text-on-surface">J. Smith</div>
+<div class="font-metadata-label text-metadata-label text-on-surface-variant uppercase">Portfolio Mgr</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="ml-64 flex-1 flex flex-col h-full bg-[#0E1116]">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-6 py-3 h-16 bg-[#0E1116] border-b hairline-border z-40">
+<div class="flex items-center gap-6">
+<h1 class="font-serif text-md text-[#D4A155]">BTO PORTFOLIO INTELLIGENCE</h1>
+<nav class="hidden lg:flex gap-6 border-l hairline-border pl-6 h-8 items-center">
+<a class="font-metadata-label text-metadata-label text-[#D4A155] border-b border-[#D4A155] pb-2 pt-2" href="#">SUMMARY</a>
+<a class="font-metadata-label text-metadata-label text-[#8B8F99] hover:text-[#E8E6E1] transition-opacity pt-2 pb-2" href="#">DIAGNOSTICS</a>
+<a class="font-metadata-label text-metadata-label text-[#8B8F99] hover:text-[#E8E6E1] transition-opacity pt-2 pb-2" href="#">GAP ANALYSIS</a>
+<a class="font-metadata-label text-metadata-label text-[#8B8F99] hover:text-[#E8E6E1] transition-opacity pt-2 pb-2" href="#">REPORTS</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-[#8B8F99] hover:text-[#E8E6E1] transition-opacity">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</button>
+<div class="w-px h-4 bg-[#2A2F3A]"></div>
+<button class="text-[#8B8F99] hover:text-[#E8E6E1] transition-opacity">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+</button>
+<button class="text-[#8B8F99] hover:text-[#E8E6E1] transition-opacity">
+<span class="material-symbols-outlined text-[20px]">help_outline</span>
+</button>
+<button class="ml-2 px-3 py-1.5 border hairline-border text-[#E8E6E1] font-metadata-label text-metadata-label uppercase hover:bg-surface-container transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">download</span>
+                    EXPORT DATA
+                </button>
+</div>
+</header>
+<!-- Dashboard Canvas -->
+<div class="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
+<!-- Context Header & Filters -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pb-4 border-b hairline-border">
+<div>
+<h2 class="font-h1-editorial text-h1-editorial text-on-surface mb-2">Portfolio Health</h2>
+<p class="font-body-ui text-body-ui text-on-surface-variant">Diagnostic view of active initiatives. Plot maps alignment against priority.</p>
+</div>
+<div class="flex flex-wrap gap-3">
+<div class="flex flex-col gap-1">
+<label class="font-metadata-label text-metadata-label text-on-surface-variant">STRATEGY</label>
+<select class="bg-surface border hairline-border text-on-surface font-tabular-data text-tabular-data px-3 py-1.5 focus:border-primary-container focus:ring-0 rounded-none w-32">
+<option>All Strategies</option>
+<option>Commercial</option>
+<option>R&amp;D</option>
+</select>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-metadata-label text-metadata-label text-on-surface-variant">FIX VERSION</label>
+<select class="bg-surface border hairline-border text-on-surface font-tabular-data text-tabular-data px-3 py-1.5 focus:border-primary-container focus:ring-0 rounded-none w-32">
+<option>Q3 Release</option>
+<option>Q4 Release</option>
+</select>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-metadata-label text-metadata-label text-on-surface-variant">PRIORITY</label>
+<select class="bg-surface border hairline-border text-on-surface font-tabular-data text-tabular-data px-3 py-1.5 focus:border-primary-container focus:ring-0 rounded-none w-32">
+<option>High Priority</option>
+<option>All Levels</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Summary Stats Bar -->
+<div class="grid grid-cols-2 md:grid-cols-5 gap-px bg-[#2A2F3A] border hairline-border">
+<div class="bg-surface p-4 flex flex-col justify-center">
+<span class="font-metadata-label text-metadata-label text-on-surface-variant mb-1">TOTAL INITIATIVES</span>
+<span class="font-data-large text-data-large text-on-surface">15</span>
+</div>
+<div class="bg-surface p-4 flex flex-col justify-center">
+<span class="font-metadata-label text-metadata-label text-on-surface-variant mb-1">ACCELERATE</span>
+<span class="font-data-large text-data-large text-tertiary">4</span>
+</div>
+<div class="bg-surface p-4 flex flex-col justify-center border-l-2 border-error">
+<span class="font-metadata-label text-metadata-label text-error mb-1">AT RISK</span>
+<span class="font-data-large text-data-large text-on-surface">3</span>
+</div>
+<div class="bg-surface p-4 flex flex-col justify-center">
+<span class="font-metadata-label text-metadata-label text-on-surface-variant mb-1">NO SD HEALTH</span>
+<span class="font-data-large text-data-large text-on-surface-variant">2</span>
+</div>
+<div class="bg-surface p-4 flex flex-col justify-center">
+<span class="font-metadata-label text-metadata-label text-on-surface-variant mb-1">AVG ALIGNMENT</span>
+<span class="font-data-large text-data-large text-primary-container">68%</span>
+</div>
+</div>
+<!-- Main Content Area: Plot & Detail Panel -->
+<div class="flex flex-col xl:flex-row gap-6 flex-1 min-h-0">
+<!-- 2x2 Scatter Plot Canvas -->
+<div class="flex-1 bg-surface border hairline-border flex flex-col min-h-[500px]">
+<div class="p-4 border-b hairline-border flex justify-between items-center">
+<h3 class="font-body-ui-bold text-body-ui-bold text-on-surface">Alignment vs. Priority Matrix</h3>
+<div class="flex gap-4">
+<div class="flex items-center gap-1.5">
+<div class="w-2 h-2 bg-[#2E7D32] rounded-full"></div>
+<span class="font-metadata-label text-metadata-label text-on-surface-variant">Healthy</span>
+</div>
+<div class="flex items-center gap-1.5">
+<div class="w-2 h-2 bg-[#F57F17] rounded-full"></div>
+<span class="font-metadata-label text-metadata-label text-on-surface-variant">Warning</span>
+</div>
+<div class="flex items-center gap-1.5">
+<div class="w-2 h-2 bg-error rounded-full"></div>
+<span class="font-metadata-label text-metadata-label text-on-surface-variant">Critical</span>
+</div>
+</div>
+</div>
+<div class="flex-1 relative p-8">
+<!-- Y Axis Label -->
+<div class="absolute left-2 top-1/2 -translate-y-1/2 -rotate-90 font-metadata-label text-metadata-label text-on-surface-variant tracking-widest origin-center">
+                            PRIORITY SCORE
+                        </div>
+<!-- X Axis Label -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 font-metadata-label text-metadata-label text-on-surface-variant tracking-widest">
+                            ALIGNMENT SCORE
+                        </div>
+<!-- Grid -->
+<div class="absolute inset-8 border hairline-border border-[#2A2F3A]">
+<!-- Crosshairs -->
+<div class="absolute inset-0 flex">
+<div class="w-1/2 border-r hairline-border border-dashed border-[#4f4538]"></div>
+<div class="w-1/2"></div>
+</div>
+<div class="absolute inset-0 flex flex-col">
+<div class="h-1/2 border-b hairline-border border-dashed border-[#4f4538]"></div>
+<div class="h-1/2"></div>
+</div>
+<!-- Quadrant Labels -->
+<div class="absolute top-4 left-4 font-metadata-label text-metadata-label text-error/60 tracking-widest">AT RISK</div>
+<div class="absolute top-4 right-4 font-metadata-label text-metadata-label text-tertiary/60 tracking-widest text-right">ACCELERATE</div>
+<div class="absolute bottom-4 left-4 font-metadata-label text-metadata-label text-on-surface-variant/40 tracking-widest">DORMANT</div>
+<div class="absolute bottom-4 right-4 font-metadata-label text-metadata-label text-primary-container/60 tracking-widest text-right">OVERINVESTED</div>
+<!-- Data Points (Simulated) -->
+<!-- Q1: AT RISK (High Priority, Low Alignment) -->
+<div class="absolute top-[15%] left-[25%] group">
+<div class="w-4 h-4 bg-error rounded-full opacity-80 border-2 border-surface cursor-pointer hover:scale-125 transition-transform" title="HCP Engagement Data Foundation"></div>
+</div>
+<div class="absolute top-[25%] left-[10%] group">
+<div class="w-3 h-3 bg-error rounded-full opacity-80 border-2 border-surface cursor-pointer hover:scale-125 transition-transform"></div>
+</div>
+<div class="absolute top-[40%] left-[35%] group">
+<div class="w-5 h-5 bg-[#F57F17] rounded-full opacity-80 border-2 border-surface cursor-pointer hover:scale-125 transition-transform"></div>
+</div>
+<!-- Q2: ACCELERATE (High Priority, High Alignment) -->
+<div class="absolute top-[20%] right-[30%] group">
+<div class="w-6 h-6 bg-[#2E7D32] rounded-full opacity-80 border-2 border-surface cursor-pointer hover:scale-125 transition-transform ring-2 ring-tertiary ring-offset-2 ring-offset-surface" title="Commercial Data Lake Migration"></div>
+<!-- Active Data Point Label -->
+<div class="absolute left-full ml-2 top-1/2 -translate-y-1/2 bg-surface-container border hairline-border px-2 py-1 font-tabular-data text-[10px] whitespace-nowrap z-10 text-on-surface">
+                                    Commercial Data Lake
+                                </div>
+</div>
+<div class="absolute top-[35%] right-[15%] group">
+<div class="w-3 h-3 bg-[#2E7D32] rounded-full opacity-80 border-2 border-surface cursor-pointer hover:scale-125 transition-transform"></div>
+</div>
+<div class="absolute top-[10%] right-[45%] group">
+<div class="w-4 h-4 bg-[#F57F17] rounded-full opacity-80 border-2 border-surface cursor-pointer hover:scale-125 transition-transform"></div>
+</div>
+<div class="absolute top-[45%] right-[25%] group">
+<div class="w-5 h-5 bg-[#2E7D32] rounded-full opacity-80 border-2 border-surface cursor-pointer hover:scale-125 transition-transform"></div>
+</div>
+<!-- Q3: DORMANT (Low Priority, Low Alignment) -->
+<div class="absolute bottom-[20%] left-[20%] group">
+<div class="w-2 h-2 bg-[#F57F17] rounded-full opacity-80 border-2 border-surface cursor-pointer hover:scale-125 transition-transform"></div>
+</div>
+<div class="absolute bottom-[35%] left-[40%] group">
+<div class="w-3 h-3 bg-[#9E9E9E] rounded-full opacity-80 border-2 border-surface cursor-pointer hover:scale-125 transition-transform"></div>
+</div>
+<div class="absolute bottom-[10%] left-[15%] group">
+<div class="w-2 h-2 bg-[#9E9E9E] rounded-full opacity-80 border-2 border-surface cursor-pointer hover:scale-125 transition-transform"></div>
+</div>
+<div class="absolute bottom-[45%] left-[10%] group">
+<div class="w-4 h-4 bg-error rounded-full opacity-80 border-2 border-surface cursor-pointer hover:scale-125 transition-transform"></div>
+</div>
+<!-- Q4: OVERINVESTED (Low Priority, High Alignment) -->
+<div class="absolute bottom-[30%] right-[30%] group">
+<div class="w-5 h-5 bg-[#2E7D32] rounded-full opacity-80 border-2 border-surface cursor-pointer hover:scale-125 transition-transform"></div>
+</div>
+<div class="absolute bottom-[15%] right-[15%] group">
+<div class="w-4 h-4 bg-[#F57F17] rounded-full opacity-80 border-2 border-surface cursor-pointer hover:scale-125 transition-transform"></div>
+</div>
+<div class="absolute bottom-[40%] right-[45%] group">
+<div class="w-3 h-3 bg-[#2E7D32] rounded-full opacity-80 border-2 border-surface cursor-pointer hover:scale-125 transition-transform"></div>
+</div>
+<div class="absolute bottom-[25%] right-[40%] group">
+<div class="w-6 h-6 bg-[#2E7D32] rounded-full opacity-80 border-2 border-surface cursor-pointer hover:scale-125 transition-transform"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Side Detail Panel -->
+<div class="w-full xl:w-96 bg-surface border hairline-border flex flex-col shrink-0">
+<div class="p-4 border-b hairline-border">
+<div class="font-metadata-label text-metadata-label text-on-surface-variant mb-1">SELECTED INITIATIVE</div>
+<h3 class="font-body-ui-bold text-body-ui-bold text-on-surface leading-snug">Commercial Data Lake Migration</h3>
+</div>
+<div class="p-4 flex flex-col gap-6 overflow-y-auto">
+<!-- Key Metrics -->
+<div class="grid grid-cols-2 gap-4">
+<div>
+<div class="font-metadata-label text-metadata-label text-on-surface-variant mb-1">PRIORITY</div>
+<div class="font-data-large text-data-large text-on-surface">8.4</div>
+</div>
+<div>
+<div class="font-metadata-label text-metadata-label text-on-surface-variant mb-1">ALIGNMENT</div>
+<div class="font-data-large text-data-large text-tertiary">92%</div>
+</div>
+</div>
+<!-- Status Chip -->
+<div>
+<div class="font-metadata-label text-metadata-label text-on-surface-variant mb-2">SD HEALTH TIER</div>
+<div class="inline-flex items-center bg-[#2E7D32]/15 border-l-2 border-[#2E7D32] px-3 py-1">
+<span class="font-metadata-label text-metadata-label text-[#2E7D32]">HEALTHY</span>
+</div>
+</div>
+<div class="w-full h-px bg-[#2A2F3A]"></div>
+<!-- Metadata List -->
+<div class="space-y-3">
+<div class="flex justify-between items-baseline">
+<span class="font-tabular-data text-tabular-data text-on-surface-variant">Total Epics</span>
+<span class="font-tabular-data text-tabular-data text-on-surface">24</span>
+</div>
+<div class="flex justify-between items-baseline">
+<span class="font-tabular-data text-tabular-data text-on-surface-variant">Fix Version</span>
+<span class="font-tabular-data text-tabular-data text-on-surface">Q3 Release</span>
+</div>
+<div class="flex justify-between items-baseline">
+<span class="font-tabular-data text-tabular-data text-on-surface-variant">Sponsor</span>
+<span class="font-tabular-data text-tabular-data text-on-surface">E. Thompson</span>
+</div>
+</div>
+<div class="w-full h-px bg-[#2A2F3A]"></div>
+<!-- Action -->
+<button class="w-full py-2 bg-primary-container text-on-primary-container font-metadata-label text-metadata-label uppercase border border-primary-container hover:bg-primary transition-colors">
+                             VIEW FULL DIAGNOSTIC
+                         </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>
