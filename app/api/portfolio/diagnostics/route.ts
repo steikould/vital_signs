@@ -6,9 +6,11 @@
  *       active portfolio, plus aggregations by strategy and by quadrant.
  *
  *       Optional query params (filter the inventory and the aggregations):
- *         - `severity` — "high" | "medium" | "low"
- *         - `category` — one of `ISSUE_CATEGORIES[].value`
- *         - `strategy` — exact match on initiative `strategyTag`
+ *         - `severity`   — "high" | "medium" | "low"
+ *         - `category`   — one of `ISSUE_CATEGORIES[].value`
+ *         - `strategy`   — exact match on initiative `strategyTag`
+ *         - `initiative` — exact match on `initiativeId` (e.g. "BTO-002");
+ *                          set by the KPI drill-down drawer on Portfolio Health
  */
 
 import { NextResponse } from "next/server";
@@ -28,6 +30,7 @@ export async function GET(req: Request): Promise<NextResponse<PortfolioDiagnosti
       severity: severity === "high" || severity === "medium" || severity === "low" ? severity : undefined,
       category: params.get("category") ?? undefined,
       strategy: params.get("strategy") ?? undefined,
+      initiative: params.get("initiative") ?? undefined,
     }),
   );
 }

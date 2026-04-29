@@ -14,6 +14,7 @@ import { getInitiatives, getEpicsByInitiatives } from "../../jira/client";
 import { getSdDocument, type SdDocument } from "../../external/sd-registry";
 import type { PortfolioHealthResponse } from "../../../api/portfolio/health/route";
 import { computeAlignment } from "../project-alignment/alignment";
+import { getIssueCountsByInitiative, type IssueCount } from "../portfolio-diagnostics";
 
 type ScatterPoint = PortfolioHealthResponse["scatter"][number];
 type Summary = PortfolioHealthResponse["summary"];
@@ -44,9 +45,20 @@ export async function buildPortfolioHealth(
     alignments.set(init.key, r.pct);
   }
 
+  // Issue counts come from running the diagnostic detectors once and
+  // bucketing the result by initiative — keeps the SUMMARY surface in
+  // sync with /portfolio-diagnostics automatically.
+  const issueCounts = await getIssueCountsByInitiative();
+  const emptyCount: IssueCount = { total: 0, high: 0, medium: 0, low: 0 };
+
   const scatter = await Promise.all(
     initiatives.map((init) =>
-      buildScatterPoint(init, alignments.get(init.key) ?? 0, epicsByInit.get(init.key) ?? []),
+      buildScatterPoint(
+        init,
+        alignments.get(init.key) ?? 0,
+        epicsByInit.get(init.key) ?? [],
+        issueCounts[init.key] ?? emptyCount,
+      ),
     ),
   );
   const summary = await buildSummary(initiatives, alignments);
@@ -94,6 +106,7 @@ async function buildScatterPoint(
   init: JiraIssue,
   alignmentPct: number,
   epics: JiraIssue[],
+  issueCount: IssueCount,
 ): Promise<ScatterPoint> {
   const priority = init.customFields.cioPriority ?? 0;
   const priorityScore = Math.round((priority / 10) * 10) / 10;
@@ -109,6 +122,8 @@ async function buildScatterPoint(
     totalEpics: epics.length,
     fixVersion: init.fixVersions[0] ?? "Unscheduled",
     sponsor: init.customFields.sponsor ?? "—",
+    hasSd: sd !== null,
+    issueCount,
   };
 }
 

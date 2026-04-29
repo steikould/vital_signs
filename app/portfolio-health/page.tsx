@@ -39,20 +39,15 @@ export default async function PortfolioHealthPage({
         <PortfolioFilters strategies={strategies.map((s) => s.tag)} fixVersions={FIX_VERSIONS} />
       </div>
 
-      {/* Summary Stats Bar */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-px bg-hairline border border-hairline">
-        <Stat label="TOTAL INITIATIVES" value={String(summary.totalInitiatives)} />
-        <Stat label="ACCELERATE" value={String(summary.accelerate)} valueClass="text-tertiary" />
-        <Stat label="AT RISK" value={String(summary.atRisk)} labelClass="text-error" leftStripe="border-error" />
-        <Stat label="NO SD HEALTH" value={String(summary.noSdHealth)} valueClass="text-fg-muted" />
-        <Stat label="AVG ALIGNMENT" value={`${summary.avgAlignmentPct}%`} valueClass="text-amber" />
-      </div>
-
-      {/* Plot + Detail Panel (interactive) */}
+      {/* Stats + plot + detail panel — interactive (stats are clickable, KPI drill-down opens). */}
       {scatter.length === 0 ? (
         <EmptyState />
       ) : (
-        <PortfolioHealthInteractive scatter={scatter} defaultSelectedId={defaultSelectedId} />
+        <PortfolioHealthInteractive
+          summary={summary}
+          scatter={scatter}
+          defaultSelectedId={defaultSelectedId}
+        />
       )}
     </div>
   );
@@ -81,25 +76,3 @@ function EmptyState() {
   );
 }
 
-function Stat({
-  label,
-  value,
-  labelClass = "text-fg-muted",
-  valueClass = "text-fg-default",
-  leftStripe,
-}: {
-  label: string;
-  value: string;
-  labelClass?: string;
-  valueClass?: string;
-  leftStripe?: string;
-}) {
-  return (
-    <div
-      className={`bg-surface-1 p-4 flex flex-col justify-center ${leftStripe ? `border-l-2 ${leftStripe}` : ""}`}
-    >
-      <span className={`font-metadata-label text-metadata-label mb-1 ${labelClass}`}>{label}</span>
-      <span className={`font-data-large text-data-large tnum ${valueClass}`}>{value}</span>
-    </div>
-  );
-}

@@ -43,6 +43,8 @@ export type PortfolioDiagnosticsFilters = {
   category?: string;
   /** Keep only issues whose initiative carries this strategy tag. */
   strategy?: string;
+  /** Keep only issues affecting this initiative (e.g. "BTO-002"). */
+  initiative?: string;
 };
 
 export type PortfolioDiagnosticsResponse = {
@@ -114,6 +116,29 @@ export async function buildPortfolioDiagnostics(
   };
 }
 
+/** Issue tally per severity for one initiative. */
+export type IssueCount = { total: number; high: number; medium: number; low: number };
+
+/**
+ * Lightweight roll-up of `buildPortfolioDiagnostics().issues` keyed by
+ * `initiativeId`. Used by other metric pages (e.g. portfolio-health)
+ * that want to surface "this initiative has N open issues" without
+ * depending on the full response shape.
+ */
+export async function getIssueCountsByInitiative(): Promise<Record<string, IssueCount>> {
+  const { issues } = await buildPortfolioDiagnostics();
+  const out: Record<string, IssueCount> = {};
+  for (const issue of issues) {
+    const slot = out[issue.initiativeId] ?? { total: 0, high: 0, medium: 0, low: 0 };
+    slot.total++;
+    if (issue.severity === "high") slot.high++;
+    else if (issue.severity === "medium") slot.medium++;
+    else slot.low++;
+    out[issue.initiativeId] = slot;
+  }
+  return out;
+}
+
 /** Drop issues that don't satisfy every active filter. */
 function applyFilters(
   issues: DiagnosticIssue[],
@@ -123,6 +148,7 @@ function applyFilters(
     if (filters.severity && i.severity !== filters.severity) return false;
     if (filters.category && i.category !== filters.category) return false;
     if (filters.strategy && i.strategyTag !== filters.strategy) return false;
+    if (filters.initiative && i.initiativeId !== filters.initiative) return false;
     return true;
   });
 }

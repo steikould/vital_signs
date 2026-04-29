@@ -29,7 +29,7 @@ export default async function InitiativesIndexPage() {
       {/* Page Header */}
       <div className="pb-4 border-b border-hairline">
         <h2 className="font-h1-editorial text-h1-editorial text-fg-default mb-2">
-          Initiatives
+          All Initiatives
         </h2>
         <p className="font-body-ui text-body-ui text-fg-muted">
           All active BTO portfolio initiatives. Click any row to drill into its diagnostic detail.

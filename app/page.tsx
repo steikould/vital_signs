@@ -4,13 +4,13 @@ const SCREENS = [
   { href: "/portfolio-health",       label: "Portfolio Health",           domain: "Portfolio",   lens: "Summary",       status: "ported" },
   { href: "/portfolio-diagnostics",  label: "Portfolio Diagnostics",      domain: "Portfolio",   lens: "Diagnostics",   status: "ported" },
   { href: "/portfolio-gap-analysis", label: "Portfolio Gap Analysis",     domain: "Portfolio",   lens: "Gap Analysis",  status: "ported" },
-  { href: "/strategy",               label: "Strategy",                   domain: "Strategy",    lens: "Summary",       status: "ported" },
+  { href: "/strategy",               label: "Strategy Mix",               domain: "Strategy",    lens: "Summary",       status: "ported" },
   { href: "/demand-prioritization",  label: "Demand Prioritization",      domain: "Strategy",    lens: "Gap Analysis",  status: "ported" },
-  { href: "/risk",                   label: "Risk",                       domain: "Risk",        lens: "Summary",       status: "ported" },
+  { href: "/risk",                   label: "Risk Summary",               domain: "Risk",        lens: "Summary",       status: "ported" },
   { href: "/project-alignment",      label: "Project Alignment",          domain: "Risk",        lens: "Gap Analysis",  status: "ported" },
   { href: "/solution-design-health", label: "Solution Design Health",     domain: "Risk",        lens: "Diagnostics",   status: "ported" },
-  { href: "/initiatives",            label: "Initiatives",                domain: "Initiatives", lens: "Summary",       status: "ported" },
-  { href: "/initiative-detail",      label: "Initiative Detail (drawer)", domain: "Initiatives", lens: "Diagnostics",   status: "ported" },
+  { href: "/initiatives",            label: "All Initiatives",            domain: "Initiatives", lens: "Summary",       status: "ported" },
+  { href: "/initiative-detail",      label: "Initiative Detail",          domain: "Initiatives", lens: "Diagnostics",   status: "ported" },
 ] as const;
 
 export default function Home() {

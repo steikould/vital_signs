@@ -3,11 +3,20 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+type SubItem = {
+  label: string;
+  href: string;
+};
+
 type Domain = {
   label: string;
   icon: string;
+  /** Where clicking the domain header itself goes (typically the SUMMARY page). */
   href: string;
+  /** True when the current pathname falls inside this domain. */
   matches: (pathname: string) => boolean;
+  /** Pages within this domain, listed under the header. Empty/undefined = no sub-items. */
+  subItems?: SubItem[];
 };
 
 const DOMAINS: Domain[] = [
@@ -16,12 +25,21 @@ const DOMAINS: Domain[] = [
     icon: "dashboard",
     href: "/portfolio-health",
     matches: (p) => p === "/" || p.startsWith("/portfolio"),
+    subItems: [
+      { label: "Health", href: "/portfolio-health" },
+      { label: "Diagnostics", href: "/portfolio-diagnostics" },
+      { label: "Gap Analysis", href: "/portfolio-gap-analysis" },
+    ],
   },
   {
     label: "STRATEGY",
     icon: "query_stats",
     href: "/strategy",
     matches: (p) => p.startsWith("/strategy") || p.startsWith("/demand-prioritization"),
+    subItems: [
+      { label: "Strategy Mix", href: "/strategy" },
+      { label: "Demand Prioritization", href: "/demand-prioritization" },
+    ],
   },
   {
     label: "RISK",
@@ -31,12 +49,21 @@ const DOMAINS: Domain[] = [
       p.startsWith("/risk") ||
       p.startsWith("/project-alignment") ||
       p.startsWith("/solution-design-health"),
+    subItems: [
+      { label: "Risk Summary", href: "/risk" },
+      { label: "Solution Design Health", href: "/solution-design-health" },
+      { label: "Project Alignment", href: "/project-alignment" },
+    ],
   },
   {
     label: "INITIATIVES",
     icon: "account_tree",
     href: "/initiatives",
     matches: (p) => p.startsWith("/initiative"),
+    subItems: [
+      { label: "All Initiatives", href: "/initiatives" },
+      { label: "Initiative Detail", href: "/initiative-detail" },
+    ],
   },
   {
     label: "SYSTEM",
@@ -60,25 +87,49 @@ export function Sidebar() {
       <div className="flex-1 overflow-y-auto py-4">
         <ul className="space-y-1">
           {DOMAINS.map((domain) => {
-            const active = domain.matches(pathname);
+            const domainActive = domain.matches(pathname);
             return (
               <li key={domain.label}>
+                {/* Domain row */}
                 <Link
                   href={domain.href}
                   className={
-                    active
-                      ? "flex items-center gap-3 text-amber border-l-2 border-amber bg-base font-bold px-6 py-4"
-                      : "flex items-center gap-3 text-fg-muted px-6 py-4 hover:bg-base hover:text-fg-default transition-colors"
+                    domainActive
+                      ? "flex items-center gap-3 text-amber border-l-2 border-amber bg-base font-bold px-6 py-3"
+                      : "flex items-center gap-3 text-fg-muted px-6 py-3 hover:bg-base hover:text-fg-default transition-colors"
                   }
                 >
                   <span
                     className="material-symbols-outlined text-[18px]"
-                    style={active ? { fontVariationSettings: "'FILL' 1" } : undefined}
+                    style={domainActive ? { fontVariationSettings: "'FILL' 1" } : undefined}
                   >
                     {domain.icon}
                   </span>
                   <span className="font-metadata-label text-metadata-label">{domain.label}</span>
                 </Link>
+
+                {/* Sub-items, indented past the icon */}
+                {domain.subItems && domain.subItems.length > 0 && (
+                  <ul>
+                    {domain.subItems.map((sub) => {
+                      const subActive = pathname === sub.href;
+                      return (
+                        <li key={sub.href}>
+                          <Link
+                            href={sub.href}
+                            className={
+                              subActive
+                                ? "flex items-center pl-[3.25rem] pr-4 py-1.5 text-amber font-tabular-data text-tabular-data"
+                                : "flex items-center pl-[3.25rem] pr-4 py-1.5 text-fg-muted hover:text-fg-default hover:bg-base transition-colors font-tabular-data text-tabular-data"
+                            }
+                          >
+                            {sub.label}
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
               </li>
             );
           })}

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { apiFetch } from "../lib/api";
 import type { PortfolioDiagnosticsResponse } from "../api/portfolio/diagnostics/route";
 import { getAllStrategies } from "../lib/external/strategy-catalog";
@@ -34,11 +35,12 @@ const QUADRANT_ACCENT: Record<Issue["quadrant"], string> = {
 export default async function PortfolioDiagnosticsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ severity?: string; category?: string; strategy?: string }>;
+  searchParams: Promise<{ severity?: string; category?: string; strategy?: string; initiative?: string }>;
 }) {
   const params = await searchParams;
   const apiQuery = buildQuery(params);
   const hasFilters = apiQuery !== "";
+  const initiativeFilter = params.initiative;
 
   const [data, strategies] = await Promise.all([
     apiFetch<PortfolioDiagnosticsResponse>(`/api/portfolio/diagnostics${apiQuery}`),
@@ -101,10 +103,16 @@ export default async function PortfolioDiagnosticsPage({
 
       {/* Issue Inventory Table */}
       <div className="bg-surface-1 border border-hairline">
-        <div className="px-4 py-3 border-b border-hairline bg-base">
+        <div className="px-4 py-3 border-b border-hairline bg-base flex justify-between items-center gap-4">
           <h3 className="font-body-ui-bold text-body-ui-bold text-fg-default">
             Issue Inventory
           </h3>
+          {initiativeFilter && (
+            <FilteredToChip
+              initiativeId={initiativeFilter}
+              clearHref={buildClearInitiativeHref(params)}
+            />
+          )}
         </div>
         {issues.length === 0 ? (
           <div className="p-12 text-center">
@@ -175,13 +183,40 @@ export default async function PortfolioDiagnosticsPage({
 }
 
 /** Build the query string forwarded to the API, dropping unknown values. */
-function buildQuery(p: { severity?: string; category?: string; strategy?: string }): string {
+function buildQuery(p: { severity?: string; category?: string; strategy?: string; initiative?: string }): string {
   const out = new URLSearchParams();
   if (p.severity && SEVERITY_VALUES.has(p.severity)) out.set("severity", p.severity);
   if (p.category && CATEGORY_VALUES.has(p.category)) out.set("category", p.category);
   if (p.strategy) out.set("strategy", p.strategy);
+  if (p.initiative) out.set("initiative", p.initiative);
   const qs = out.toString();
   return qs ? `?${qs}` : "";
+}
+
+/** Build a URL that clears just the `initiative` filter, keeping other filters. */
+function buildClearInitiativeHref(p: {
+  severity?: string;
+  category?: string;
+  strategy?: string;
+}): string {
+  return buildQuery({ ...p, initiative: undefined }) || "?";
+}
+
+function FilteredToChip({ initiativeId, clearHref }: { initiativeId: string; clearHref: string }) {
+  return (
+    <div className="inline-flex items-center gap-2 bg-amber/15 border-l-2 border-amber px-2 py-1">
+      <span className="font-metadata-label text-metadata-label text-amber">
+        FILTERED TO {initiativeId}
+      </span>
+      <Link
+        href={clearHref}
+        aria-label="Clear initiative filter"
+        className="text-amber hover:text-fg-default transition-colors"
+      >
+        <span className="material-symbols-outlined text-[16px]">close</span>
+      </Link>
+    </div>
+  );
 }
 
 function Stat({

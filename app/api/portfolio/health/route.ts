@@ -60,6 +60,19 @@ export type PortfolioHealthResponse = {
     fixVersion: string;
     /** Executive sponsor's display name. Shown in the panel. */
     sponsor: string;
+    /** Whether the SD registry has any record (any status) for this initiative. */
+    hasSd: boolean;
+    /**
+     * Open diagnostic issues affecting this initiative, broken down by
+     * severity. Sourced from the same detectors that drive
+     * /portfolio-diagnostics — kept in sync automatically.
+     */
+    issueCount: {
+      total: number;
+      high: number;
+      medium: number;
+      low: number;
+    };
   }>;
   /**
    * Initiative ID that should be selected on first render. Must match
