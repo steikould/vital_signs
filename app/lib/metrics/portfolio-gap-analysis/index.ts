@@ -10,16 +10,29 @@
  */
 
 import type { JiraProject } from "../../jira/types";
-import { getInitiatives, getEpicsByInitiatives } from "../../jira/client";
 import { getMixRevisions, type MixRevision } from "../../external/mix-revisions";
+import { query } from "../../databricks/client";
 import {
   resolveTarget,
-  computeActualMix,
   computeDeviations,
   largestDeviation,
   type DeviationRow,
   type TargetSource,
 } from "./mix";
+
+type GapAnalysisRow = {
+  initiative_key: string;
+  initiative_name: string;
+  strategy_tag: string | null;
+  epic_count: number;
+  tagged_epic_count: number;
+  actual_pct_dalm: number;
+  actual_pct_pint: number;
+  actual_pct_dx: number;
+  actual_pct_ghp: number;
+  actual_pct_dalmation: number;
+  actual_pct_ai: number;
+};
 
 export type GapAnalysisInitiative = {
   initiativeId: string;
@@ -78,29 +91,47 @@ export type PortfolioGapAnalysisResponse = {
   matrix: ProjectMatrixRow[];
 };
 
-/** Build the gap-analysis response from Jira + SD revisions. */
+/** Build the gap-analysis response using the Databricks portfolio mix view. */
 export async function buildPortfolioGapAnalysis(): Promise<PortfolioGapAnalysisResponse> {
-  const initiatives = await getInitiatives();
-  const epicsByInit = await getEpicsByInitiatives(initiatives.map((i) => i.key));
+  const rows = await query<GapAnalysisRow>(
+    `SELECT
+      initiative_key,
+      initiative_name,
+      strategy_tag,
+      epic_count,
+      tagged_epic_count,
+      actual_pct_dalm,
+      actual_pct_pint,
+      actual_pct_dx,
+      actual_pct_ghp,
+      actual_pct_dalmation,
+      actual_pct_ai
+    FROM gold_portfolio_gap_actual_mix`,
+  );
 
   const enriched: GapAnalysisInitiative[] = await Promise.all(
-    initiatives.map(async (init) => {
-      const epics = epicsByInit.get(init.key) ?? [];
-      const revisions = await getMixRevisions(init.key);
+    rows.map(async (row) => {
+      const revisions = await getMixRevisions(row.initiative_key);
       const target = resolveTarget(revisions);
-      const actual = computeActualMix(epics);
-      const deviations = computeDeviations(target.mix, actual);
-      const taggedEpicCount = epics.filter((e) => e.customFields.jiraProject).length;
+      const actualMix = {
+        DALM: Number(row.actual_pct_dalm || 0) / 100,
+        PINT: Number(row.actual_pct_pint || 0) / 100,
+        DX: Number(row.actual_pct_dx || 0) / 100,
+        GHP: Number(row.actual_pct_ghp || 0) / 100,
+        DALMATION: Number(row.actual_pct_dalmation || 0) / 100,
+        AI: Number(row.actual_pct_ai || 0) / 100,
+      } as Record<JiraProject, number>;
+      const deviations = computeDeviations(target.mix, actualMix);
       return {
-        initiativeId: init.key,
-        name: init.summary,
-        strategyTag: init.customFields.strategyTag,
-        epicCount: epics.length,
-        taggedEpicCount,
+        initiativeId: row.initiative_key,
+        name: row.initiative_name,
+        strategyTag: row.strategy_tag ?? undefined,
+        epicCount: Number(row.epic_count),
+        taggedEpicCount: Number(row.tagged_epic_count),
         targetSource: target.source,
         targetSourceVersion: target.sourceVersion,
         targetMix: target.mix,
-        actualMix: actual,
+        actualMix,
         deviations,
         largestDeviation: largestDeviation(deviations),
         revisions,

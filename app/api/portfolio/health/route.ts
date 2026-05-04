@@ -85,6 +85,24 @@ export type PortfolioHealthResponse = {
 /**
  * GET /api/portfolio/health — delegates to the metrics layer.
  *
+ * Expected Databricks view: `gold_initiative_health`
+ * Expected columns and column types:
+ *   - initiative_key : STRING
+ *   - summary        : STRING
+ *   - status         : STRING
+ *   - sponsor        : STRING
+ *   - fix_version    : STRING
+ *   - strategy_tag   : STRING | NULL
+ *   - cio_priority   : DOUBLE
+ *   - priority_score : DOUBLE
+ *   - alignment_pct  : DOUBLE
+ *   - total_epics    : INT
+ *   - aligned_epics  : INT
+ *   - quadrant       : STRING
+ *   - health_tier    : STRING
+ *   - size_bucket    : INT
+ *   - sd_grade       : STRING | NULL
+ *
  * Optional query params:
  *   - `strategy`    — exact match on `strategyTag` (e.g. "AI Enablement")
  *   - `fixVersion`  — exact match on initiative fix version (e.g. "Q3 Release")

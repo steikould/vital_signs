@@ -1,28 +1,15 @@
 /**
- * @file Portfolio Diagnostics metric builder. Runs every detector against
- *       every initiative, then aggregates the resulting issues by strategy
- *       and quadrant for the heatmap tiles. The full issue list is returned
- *       sorted by severity descending.
+ * @file Portfolio Diagnostics metric builder. Reads the Databricks
+ *       diagnostics findings view and assembles the response shape used
+ *       by /portfolio-diagnostics.
  */
 
-import { getInitiatives, getEpicsByInitiatives } from "../../jira/client";
-import { getSdDocument } from "../../external/sd-registry";
-import { computeAlignment } from "../project-alignment/alignment";
-import {
-  type DiagnosticIssue,
-  type InitiativeContext,
-  type Quadrant,
-  detectMissingSd,
-  detectStaleSd,
-  detectCriticalAlignment,
-  detectNoEpics,
-  detectMetadataGaps,
-  detectSequencingRisk,
-} from "./detectors";
+import { query } from "../../databricks/client";
+import type { DiagnosticIssue, Quadrant } from "./detectors";
 
 /**
  * Issue categories surfaced in the filter dropdown. Single source of
- * truth: detectors emit one of these `value`s as their `category` field.
+ * truth: the Databricks diagnostics view drives these values.
  */
 export const ISSUE_CATEGORIES = [
   { value: "no-sd",                label: "No solution design" },
@@ -77,42 +64,75 @@ export type PortfolioDiagnosticsResponse = {
 export async function buildPortfolioDiagnostics(
   filters: PortfolioDiagnosticsFilters = {},
 ): Promise<PortfolioDiagnosticsResponse> {
-  const initiatives = await getInitiatives();
-  const epicsByInit = await getEpicsByInitiatives(initiatives.map((i) => i.key));
+  const whereClauses: string[] = [];
+  const params: Record<string, unknown> = {};
 
-  // Build a context for each initiative; run detectors in parallel.
-  const issues: DiagnosticIssue[] = [];
-  for (const init of initiatives) {
-    const epics = epicsByInit.get(init.key) ?? [];
-    const alignment = await computeAlignment(init, epics);
-    const sd = await getSdDocument(init.key);
-    const priority = init.customFields.cioPriority ?? 0;
-    const ctx: InitiativeContext = {
-      initiative: init,
-      epics,
-      alignmentPct: alignment.pct,
-      sd,
-      quadrant: quadrantOf(priority, alignment.pct),
-      strategyTag: init.customFields.strategyTag,
-    };
-    issues.push(
-      ...detectMissingSd(ctx),
-      ...detectStaleSd(ctx),
-      ...detectCriticalAlignment(ctx),
-      ...detectNoEpics(ctx),
-      ...detectMetadataGaps(ctx),
-      ...(await detectSequencingRisk(ctx)),
-    );
+  if (filters.severity) {
+    whereClauses.push("severity = :severity");
+    params.severity = filters.severity;
+  }
+  if (filters.category) {
+    whereClauses.push("category = :category");
+    params.category = filters.category;
+  }
+  if (filters.strategy) {
+    whereClauses.push("strategy_tag = :strategy");
+    params.strategy = filters.strategy;
+  }
+  if (filters.initiative) {
+    whereClauses.push("initiative_id = :initiative");
+    params.initiative = filters.initiative;
   }
 
-  const filtered = applyFilters(issues, filters);
-  filtered.sort(bySeverityThenCategory);
+  const whereSql = whereClauses.length ? `WHERE ${whereClauses.join(" AND ")}` : "";
+  const rows = await query<{
+    id: string;
+    severity: "high" | "medium" | "low";
+    category: string;
+    title: string;
+    description: string;
+    initiative_id: string;
+    initiative_name: string;
+    quadrant: "at-risk" | "accelerate" | "dormant" | "overinvested";
+    strategy_tag: string | null;
+    suggested_action: string;
+  }>(
+    `SELECT
+      id,
+      severity,
+      category,
+      title,
+      description,
+      initiative_id,
+      initiative_name,
+      quadrant,
+      strategy_tag,
+      suggested_action
+    FROM gold_portfolio_diagnostics
+    ${whereSql}`,
+    params,
+  );
+
+  const issues = rows
+    .map((row) => ({
+      id: row.id,
+      severity: row.severity,
+      category: row.category,
+      title: row.title,
+      description: row.description,
+      initiativeId: row.initiative_id,
+      initiativeName: row.initiative_name,
+      quadrant: row.quadrant,
+      strategyTag: row.strategy_tag ?? undefined,
+      suggestedAction: row.suggested_action,
+    }))
+    .sort(bySeverityThenCategory);
 
   return {
-    summary: summarise(filtered),
-    byStrategy: aggregateByStrategy(filtered),
-    byQuadrant: aggregateByQuadrant(filtered),
-    issues: filtered,
+    summary: summarise(issues),
+    byStrategy: aggregateByStrategy(issues),
+    byQuadrant: aggregateByQuadrant(issues),
+    issues,
   };
 }
 
@@ -120,37 +140,38 @@ export async function buildPortfolioDiagnostics(
 export type IssueCount = { total: number; high: number; medium: number; low: number };
 
 /**
- * Lightweight roll-up of `buildPortfolioDiagnostics().issues` keyed by
- * `initiativeId`. Used by other metric pages (e.g. portfolio-health)
- * that want to surface "this initiative has N open issues" without
- * depending on the full response shape.
+ * Lightweight roll-up of diagnostics counts keyed by `initiativeId`.
+ * Used by portfolio-health to display issue totals and severity breakdowns.
  */
 export async function getIssueCountsByInitiative(): Promise<Record<string, IssueCount>> {
-  const { issues } = await buildPortfolioDiagnostics();
+  const rows = await query<{
+    initiative_id: string;
+    total: number;
+    high: number;
+    medium: number;
+    low: number;
+  }>(
+    `SELECT
+      initiative_id,
+      COUNT(*) AS total,
+      SUM(CASE WHEN severity = 'high' THEN 1 ELSE 0 END) AS high,
+      SUM(CASE WHEN severity = 'medium' THEN 1 ELSE 0 END) AS medium,
+      SUM(CASE WHEN severity = 'low' THEN 1 ELSE 0 END) AS low
+    FROM gold_portfolio_diagnostics
+    GROUP BY initiative_id`,
+    {},
+  );
+
   const out: Record<string, IssueCount> = {};
-  for (const issue of issues) {
-    const slot = out[issue.initiativeId] ?? { total: 0, high: 0, medium: 0, low: 0 };
-    slot.total++;
-    if (issue.severity === "high") slot.high++;
-    else if (issue.severity === "medium") slot.medium++;
-    else slot.low++;
-    out[issue.initiativeId] = slot;
+  for (const row of rows) {
+    out[row.initiative_id] = {
+      total: Number(row.total),
+      high: Number(row.high),
+      medium: Number(row.medium),
+      low: Number(row.low),
+    };
   }
   return out;
-}
-
-/** Drop issues that don't satisfy every active filter. */
-function applyFilters(
-  issues: DiagnosticIssue[],
-  filters: PortfolioDiagnosticsFilters,
-): DiagnosticIssue[] {
-  return issues.filter((i) => {
-    if (filters.severity && i.severity !== filters.severity) return false;
-    if (filters.category && i.category !== filters.category) return false;
-    if (filters.strategy && i.strategyTag !== filters.strategy) return false;
-    if (filters.initiative && i.initiativeId !== filters.initiative) return false;
-    return true;
-  });
 }
 
 /** Stat-bar counts. */
@@ -205,16 +226,6 @@ function aggregateByQuadrant(issues: DiagnosticIssue[]): PortfolioDiagnosticsRes
     quadrant,
     ...slots[quadrant],
   }));
-}
-
-/** Same quadrant logic as Portfolio Health uses, duplicated to keep folders independent. */
-function quadrantOf(priority: number, alignmentPct: number): Quadrant {
-  const highPriority = priority >= 50;
-  const aligned = alignmentPct >= 50;
-  if (highPriority && aligned) return "accelerate";
-  if (highPriority && !aligned) return "at-risk";
-  if (!highPriority && aligned) return "overinvested";
-  return "dormant";
 }
 
 const SEVERITY_RANK: Record<DiagnosticIssue["severity"], number> = {

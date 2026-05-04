@@ -5,6 +5,11 @@
  *       Returns the full inventory of diagnosed problems across the
  *       active portfolio, plus aggregations by strategy and by quadrant.
  *
+ *       Expected Databricks view: `gold_portfolio_diagnostics`
+ *       Expected columns: id, severity, category, title, description,
+ *       initiative_id, initiative_name, quadrant, strategy_tag,
+ *       suggested_action.
+ *
  *       Optional query params (filter the inventory and the aggregations):
  *         - `severity`   — "high" | "medium" | "low"
  *         - `category`   — one of `ISSUE_CATEGORIES[].value`
